@@ -1,0 +1,52 @@
+#!/bin/sh
+
+regex() {
+  if command -v pcre2grep >/dev/null
+  then
+    echo "$1" | pcre2grep "$2" >/dev/null
+  fi
+}
+
+refmonth="$1"
+if test "$refmonth" = ""
+then
+  echo    "Missing reference month." >&2
+  echo    "Command should be:" >&2
+  echo -e "\tbuild <refmonth>" >&2
+  exit 1
+elif ! regex "$refmonth" '\d{4}-\d{2}'
+then
+  echo "Invalid reference month." >&2
+  exit 2
+fi
+
+if ! test -f "data/$refmonth.lua"
+then
+  echo "Missing data file for $refmonth." >&2
+  exit 3
+fi
+
+suffix="001"
+output_dir="out"
+output_format="pdf"
+while output_file="$refmonth-invoice-$suffix" && \
+  test -f "$output_dir/$output_file.$output_format"
+do
+  suffix=$(printf "%03d" $(( 10#$suffix + 1 )))
+done
+
+if ! test -d "$output_dir"
+then
+  mkdir "$output_dir"
+fi
+
+export INVOICE_REFMONTH="$refmonth"
+lualatex \
+  --lua=main.lua \
+  --jobname="$output_file" \
+  --output-dir="$output_dir" \
+  --output-format="$output_format" \
+  --file-line-error \
+  main.tex
+unset INVOICE_REFMONTH
+

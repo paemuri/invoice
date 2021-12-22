@@ -1,0 +1,72 @@
+\documentclass[12pt]{invoice}
+
+\title{Resume}
+\author{Rafael Escobar}
+
+\begin{document}
+
+  \invoicetitle{Commercial invoice \#001/2021}
+
+  \invoicesectionheader{Issue date}
+  \begin{invoicesectiontext}
+    \directlua{tex.print(issue_date)}
+  \end{invoicesectiontext}
+
+  \invoicesectionheader{Reference}
+  \begin{invoicesectiontext}
+    \directlua{tex.print(reference_date)}
+  \end{invoicesectiontext}
+
+  \invoicesectionheader{Exporter}
+  \begin{invoicesectiontext}
+    \directlua{tex.print(exporter.name)}
+    \directlua{
+      for i in pairs(exporter.address) do
+        tex.print '\\\\'
+        tex.print(exporter.address[i])
+      end
+    }
+  \end{invoicesectiontext}
+
+  \invoicesectionheader{Consignee}
+  \begin{invoicesectiontext}
+    \directlua{tex.print(consignee.name)}
+    \directlua{
+      for i in pairs(consignee.address) do
+        tex.print '\\\\'
+        tex.print(consignee.address[i])
+      end
+    }
+  \end{invoicesectiontext}
+
+  \invoicesectionheader{Payment}
+  \begin{invoicesectiontext}
+    At sight
+    \\
+    Bank: \directlua{tex.print(bank_account.bank)}
+    \\
+    SWIFT code: \directlua{tex.print(bank_account.swift_code)}
+    \\
+    IBAN: \directlua{tex.print(bank_account.iban)}
+  \end{invoicesectiontext}
+
+  \vspace{20pt}
+  \begin{tabularx}{\textwidth}{ |
+    >{\raggedright\arraybackslash}X 
+    >{\raggedleft\arraybackslash}X
+  | }
+    \hline
+    \bfseries Description of services
+    &
+    \bfseries Price (\directlua{tex.print(services.currency)})
+    \\
+    \hline
+    \directlua{tex.print(services.description)}
+    &
+    \directlua{tex.print(services.value)}
+    \\
+    \hline
+  \end{tabularx}
+
+\end{document}
+
