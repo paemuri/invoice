@@ -41,13 +41,22 @@
 
   \invoicesectionheader{Payment}
   \begin{invoicesectiontext}
-    At sight
+    \directlua{tex.print(bank_account.payment_desc)}
     \\
-    Bank: \directlua{tex.print(bank_account.bank)}
+    IBAN:
+    \directlua{tex.print(bank_account.iban)}
     \\
-    SWIFT code: \directlua{tex.print(bank_account.swift_code)}
+    Intermediary bank:
+    \directlua{tex.print(bank_account.intermediary_bank.name)}
     \\
-    IBAN: \directlua{tex.print(bank_account.iban)}
+    Intermediary bank SWIFT code:
+    \directlua{tex.print(bank_account.intermediary_bank.swift_code)}
+    \\
+    Final bank:
+    \directlua{tex.print(bank_account.final_bank.name)}
+    \\
+    Final bank SWIFT code:
+    \directlua{tex.print(bank_account.final_bank.swift_code)}
   \end{invoicesectiontext}
 
   \vspace{20pt}

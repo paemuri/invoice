@@ -34,9 +34,16 @@ consignee = {
   },
 }
 bank_account = {
-  bank = '...',
-  swift_code = '...',
+  payment_desc = '...',
   iban = '...',
+  intermediary_bank = {
+    name = '...',
+    swift_code = '...',
+  },
+  final_bank = {
+    name = '...',
+    swift_code = '...',
+  },
 }
 ```
 
