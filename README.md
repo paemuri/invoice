@@ -44,8 +44,11 @@ bank_account = {
 Create file `data/YYYY-MM.lua` with the following body:
 
 ```lua
-issue_date = '...'
-reference_date = '...'
+invoice = {
+  reference = '...',
+  issue_date = '...',
+  reference_date = '...',
+}
 services = {
   description = '...',
   value = '...',

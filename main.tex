@@ -5,16 +5,19 @@
 
 \begin{document}
 
-  \invoicetitle{Commercial invoice \#001/2021}
+  \invoicetitle{
+    Commercial invoice
+    \#\directlua{tex.print(invoice.reference)}
+  }
 
   \invoicesectionheader{Issue date}
   \begin{invoicesectiontext}
-    \directlua{tex.print(issue_date)}
+    \directlua{tex.print(invoice.issue_date)}
   \end{invoicesectiontext}
 
   \invoicesectionheader{Reference}
   \begin{invoicesectiontext}
-    \directlua{tex.print(reference_date)}
+    \directlua{tex.print(invoice.reference_date)}
   \end{invoicesectiontext}
 
   \invoicesectionheader{Exporter}
