@@ -7,46 +7,79 @@ regex() {
   fi
 }
 
-refmonth="$1"
-if test "$refmonth" = ""
+build_file() {
+
+  refmonth="$1"
+
+  suffix="001"
+  output_dir="out"
+  output_format="pdf"
+  while output_file="$refmonth-invoice-$suffix" && \
+    test -f "$output_dir/$output_file.$output_format"
+  do
+    suffix=$(printf "%03d" $(( 10#$suffix + 1 )))
+  done
+
+  if ! test -d "$output_dir"
+  then
+    mkdir "$output_dir"
+  fi
+
+  echo "Building file for $refmonth: $output_dir/$output_file.$output_format."
+
+  export INVOICE_REFMONTH="$refmonth"
+  lualatex \
+    --lua=main.lua \
+    --jobname="$output_file" \
+    --output-dir="$output_dir" \
+    --output-format="$output_format" \
+    --file-line-error \
+    main.tex >/dev/null
+  unset INVOICE_REFMONTH
+
+}
+
+refmonth_list="$@"
+
+# If no reference month is defined, execute all of them.
+if test -z "$refmonth_list"
 then
-  echo    "Missing reference month." >&2
-  echo    "Command should be:" >&2
-  echo -e "\tbuild <refmonth>" >&2
-  exit 1
-elif ! regex "$refmonth" '\d{4}-\d{2}'
-then
-  echo "Invalid reference month." >&2
-  exit 2
+  refmonth_list="$( \
+    ls ./data/ | \
+    grep -v .gitkeep | \
+    grep -v main.lua | \
+    sed 's/\.lua//' \
+  )"
 fi
 
-if ! test -f "data/$refmonth.lua"
-then
-  echo "Missing data file for $refmonth." >&2
-  exit 3
-fi
-
-suffix="001"
-output_dir="out"
-output_format="pdf"
-while output_file="$refmonth-invoice-$suffix" && \
-  test -f "$output_dir/$output_file.$output_format"
+# Validate inputs.
+for arg in $refmonth_list
 do
-  suffix=$(printf "%03d" $(( 10#$suffix + 1 )))
+
+  if test "$arg" = "-h" || test "$arg" = "--help"
+  then
+    echo    "Invoice build"
+    echo    "Usage:"
+    echo -e "\tbuild [REF_MONTH]..."
+    exit 0
+  fi
+
+  if ! regex "$arg" '\d{4}-\d{2}'
+  then
+    echo "Invalid reference month." >&2
+    exit 2
+  fi
+
+  if ! test -f "data/$arg.lua"
+  then
+    echo "Missing data file (data/$arg.lua)." >&2
+    exit 3
+  fi
+
 done
 
-if ! test -d "$output_dir"
-then
-  mkdir "$output_dir"
-fi
-
-export INVOICE_REFMONTH="$refmonth"
-lualatex \
-  --lua=main.lua \
-  --jobname="$output_file" \
-  --output-dir="$output_dir" \
-  --output-format="$output_format" \
-  --file-line-error \
-  main.tex
-unset INVOICE_REFMONTH
-
+# Build files.
+for refmonth in $refmonth_list
+do
+  build_file "$refmonth"
+done

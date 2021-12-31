@@ -1,0 +1,12 @@
+#!/bin/sh
+
+temp="$@"
+if test -z "$temp"
+then
+  temp="$(ls ./data/ | grep -v .gitkeep | grep -v main.lua)"
+fi
+
+for x in $temp
+do
+  echo $x
+done
