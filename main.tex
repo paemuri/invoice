@@ -53,31 +53,30 @@
     IBAN:
     \directlua{tex.print(bank_account.iban)}
     \\
-    Intermediary bank:
-    \directlua{tex.print(bank_account.intermediary_bank.name)}
+    Bank:
+    \directlua{tex.print(bank_account.bank.name)}
     \\
-    Intermediary bank SWIFT code:
-    \directlua{tex.print(bank_account.intermediary_bank.swift_code)}
-    \\
-    Final bank:
-    \directlua{tex.print(bank_account.final_bank.name)}
-    \\
-    Final bank SWIFT code:
-    \directlua{tex.print(bank_account.final_bank.swift_code)}
+    SWIFT code:
+    \directlua{tex.print(bank_account.bank.swift_code)}
   \end{invoicesectiontext}
 
   \vspace{20pt}
   \begin{tabularx}{\textwidth}{ |
-    >{\raggedright\arraybackslash}X 
-    >{\raggedleft\arraybackslash}X
+    >{\centering\arraybackslash}X 
+    >{\centering\arraybackslash}X 
+    >{\centering\arraybackslash}X
   | }
     \hline
     \bfseries Description of services
+    &
+    \bfseries Period
     &
     \bfseries Price (\directlua{tex.print(services.currency)})
     \\
     \hline
     \directlua{tex.print(services.description)}
+    &
+    \directlua{tex.print(services.period)}
     &
     \directlua{tex.print(services.value)}
     \\
