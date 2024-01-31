@@ -37,6 +37,13 @@ build_file() {
     main.tex >/dev/null
   unset INVOICE_REFMONTH
 
+  echo Done. Cleaning...
+  for file in $(ls "$output_dir" | pcre2grep -v '.*\.pdf')
+  do
+    rm "$output_dir/$file"
+  done
+
+  echo Done.
 }
 
 refmonth_list="$@"
@@ -75,7 +82,6 @@ do
     echo "Missing data file (data/$arg.lua)." >&2
     exit 3
   fi
-
 done
 
 # Build files.
