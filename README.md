@@ -21,6 +21,7 @@ Create file `data/main.lua` with the following body:
 ```lua
 exporter = {
   name = '...',
+  id_number = '...',
   address = {
     '...',
     '...',
@@ -28,6 +29,7 @@ exporter = {
 }
 consignee = {
   name = '...',
+  id_number = '...',
   address = {
     '...',
     '...',
@@ -36,11 +38,7 @@ consignee = {
 bank_account = {
   payment_desc = '...',
   iban = '...',
-  intermediary_bank = {
-    name = '...',
-    swift_code = '...',
-  },
-  final_bank = {
+  bank = {
     name = '...',
     swift_code = '...',
   },

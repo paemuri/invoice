@@ -63,20 +63,15 @@
   \vspace{20pt}
   \begin{tabularx}{\textwidth}{ |
     >{\centering\arraybackslash}X 
-    >{\centering\arraybackslash}X 
     >{\centering\arraybackslash}X
   | }
     \hline
     \bfseries Description of services
     &
-    \bfseries Period
-    &
     \bfseries Price (\directlua{tex.print(services.currency)})
     \\
     \hline
     \directlua{tex.print(services.description)}
-    &
-    \directlua{tex.print(services.period)}
     &
     \directlua{tex.print(services.value)}
     \\
