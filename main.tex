@@ -58,6 +58,18 @@
     \\
     SWIFT code:
     \directlua{tex.print(bank_account.bank.swift_code)}
+    \\
+    Intermediary bank:
+    \directlua{tex.print(bank_account.intermediary_bank.name)}
+    \\
+    SWIFT code:
+    \directlua{tex.print(bank_account.intermediary_bank.swift_code)}
+    \\
+    Account holder:
+    \directlua{tex.print(bank_account.intermediary_bank.account_holder)}
+    \\
+    Account number:
+    \directlua{tex.print(bank_account.intermediary_bank.account_number)}
   \end{invoicesectiontext}
 
   \vspace{20pt}

@@ -42,6 +42,12 @@ bank_account = {
     name = '...',
     swift_code = '...',
   },
+  intermediary_bank = {
+    name = '...',
+    swift_code = '...',
+    account_holder = '...',
+    account_number = '...',
+  },
 }
 ```
 
