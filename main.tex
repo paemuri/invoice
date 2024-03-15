@@ -23,8 +23,8 @@
   \invoicesectionheader{Exporter}
   \begin{invoicesectiontext}
     \directlua{tex.print(exporter.name)}
-    % \\
-    % \directlua{tex.print(exporter.id_number)}
+    \\
+    \directlua{tex.print(exporter.id_number)}
     \directlua{
       for i in pairs(exporter.address) do
         tex.print '\\\\'
