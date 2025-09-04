@@ -15,9 +15,11 @@
     \directlua{tex.print(invoice.issue_date)}
   \end{invoicesectiontext}
 
-  \invoicesectionheader{Reference}
+  \invoicesectionheader{Work period}
   \begin{invoicesectiontext}
-    \directlua{tex.print(invoice.reference_date)}
+    \directlua{tex.print(invoice.work_period.dates)}
+    \\
+    \directlua{tex.print(invoice.work_period.hours)}
   \end{invoicesectiontext}
 
   \invoicesectionheader{Exporter}
@@ -80,7 +82,7 @@
     \hline
     \bfseries Description of services
     &
-    \bfseries Price (\directlua{tex.print(services.currency)})
+    \bfseries Price
     \\
     \hline
     \directlua{tex.print(services.description)}

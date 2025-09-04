@@ -8,7 +8,6 @@ regex() {
 }
 
 build_file() {
-
   refmonth="$1"
 
   suffix="001"
@@ -62,7 +61,6 @@ fi
 # Validate inputs.
 for arg in $refmonth_list
 do
-
   if test "$arg" = "-h" || test "$arg" = "--help"
   then
     echo    "Invoice build"
