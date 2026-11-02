@@ -9,6 +9,44 @@
 #let data = (: ..shared, ..month)
 #let invoice = data.invoice
 
+#let weekdays = (
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+)
+
+#let parse-date(value) = {
+  if type(value) == datetime {
+    value
+  } else {
+    let parts = value.split("-")
+    datetime(
+      year: int(parts.at(0)),
+      month: int(parts.at(1)),
+      day: int(parts.at(2)),
+    )
+  }
+}
+
+#let parse-time(value) = {
+  if type(value) == datetime {
+    value.hour() * 60 + value.minute()
+  } else {
+    let parts = value.split(":")
+    int(parts.at(0)) * 60 + int(parts.at(1))
+  }
+}
+
+#let format-hours(minutes) = {
+  let hours = calc.floor(minutes / 60)
+  let mins = calc.rem(minutes, 60)
+  str(hours) + ":" + (if mins < 10 { "0" } else { "" }) + str(mins)
+}
+
 #let section(title, body) = block(below: 26pt)[
   #text(weight: "bold", size: 14.4pt)[#title] \
   #body
@@ -60,4 +98,49 @@
     table.hline(stroke: 0.5mm),
     [#data.services.description], [#data.services.value],
   )
+]
+
+#if "timesheet" in data [
+  #let days = data.timesheet.days
+  #let day-minutes(day) = {
+    let start = parse-time(day.time_in)
+    let end = parse-time(day.time_out)
+    if end < start { end + 24 * 60 - start } else { end - start }
+  }
+  #let total-minutes = days.fold(0, (total, day) => total + day-minutes(day))
+  #let rows = days.map(day => {
+    let date = parse-date(day.date)
+    (
+      date.display("[year]-[month padding:zero]-[day padding:zero]"),
+      weekdays.at(date.weekday()),
+      day.time_in,
+      day.time_out,
+      format-hours(day-minutes(day)),
+    )
+  }).flatten()
+
+  #pagebreak()
+
+  #section("Timesheet")[
+    #box(width: 100%, stroke: 0.5mm, inset: 0pt)[
+      #table(
+        columns: (1fr, 1fr, 1fr, 1fr, 1fr),
+        align: center + horizon,
+        stroke: none,
+        inset: (x: 5pt, y: 5pt),
+        table.header(
+          [*Date*],
+          [*Weekday*],
+          [*Time in*],
+          [*Time out*],
+          [*Total*],
+        ),
+        table.hline(stroke: 0.5mm),
+        ..rows,
+        table.hline(stroke: 0.5mm),
+        table.cell(colspan: 4, align: right)[*#days.len() days worked*],
+        [*#format-hours(total-minutes)*],
+      )
+    ]
+  ]
 ]
