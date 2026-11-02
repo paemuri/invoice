@@ -1,5 +1,6 @@
 #set page(paper: "a4", margin: (x: 2cm, y: 1.5cm), numbering: none)
 #set text(font: "Liberation Sans", size: 12pt)
+#set par(justify: false, leading: 0.45em)
 #set document(title: "Commercial invoice", author: "Rafael Zichia")
 
 #let refmonth = sys.inputs.at("refmonth")
@@ -8,12 +9,13 @@
 #let data = (: ..shared, ..month)
 #let invoice = data.invoice
 
-#let section(title, body) = block[
+#let section(title, body) = block(below: 26pt)[
   #text(weight: "bold", size: 14.4pt)[#title] \
   #body
 ]
 
 #text(weight: "bold", size: 17.28pt)[Commercial invoice \##invoice.reference]
+#v(15pt)
 
 #section("Issue date")[#invoice.issue_date]
 
@@ -47,11 +49,13 @@
   Account number: #data.bank_account.intermediary_bank.account_number
 ]
 
+#v(20pt)
 #box(width: 100%, stroke: 0.5mm, inset: 0pt)[
   #table(
     columns: (1fr, 1fr),
     align: center + horizon,
     stroke: none,
+    inset: (x: 5pt, y: 5pt),
     table.header([*Description of services*], [*Price*]),
     table.hline(stroke: 0.5mm),
     [#data.services.description], [#data.services.value],
