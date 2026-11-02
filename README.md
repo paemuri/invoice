@@ -66,17 +66,27 @@ value = "..."
 Run `./build YYYY-MM` to build one invoice, or `./build` to build every TOML
 file. The PDF is written to `out/` as `YYYY-MM-invoice-NNN.pdf`.
 
-## License
+## Source code
 
-This project code is in the public domain. See the [LICENSE file][1].
+The main repository is on [SourceHut][source-srht]. Mirrors exist on
+[Codeberg][source-codeberg] and [GitHub][source-github] for convenience, but
+they might occasionally be outdated.
 
-### Contribution
+## License and contribution
 
-Unless you explicitly state otherwise, any contribution intentionally
-submitted for inclusion in the work by you shall be in the public
-domain, without any additional terms or conditions.
+All original code is licensed under the
+[GNU Affero General Public License 3.0 or later][license-code].
 
-[1]: ./LICENSE
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you shall be licensed under the same license as
+the material to which it is contributed, without any additional terms or
+conditions.
 
-[badge-1-img]: https://img.shields.io/badge/license-Unlicense-green?style=flat-square
+[badge-1-img]: https://img.shields.io/badge/license-AGPL--3.0--or--later-green?style=flat-square
 [badge-1-link]: ./LICENSE
+
+[source-srht]: https://git.sr.ht/~paemuri/invoice
+[source-codeberg]: https://codeberg.org/paemuri/invoice
+[source-github]: https://github.com/paemuri/invoice
+
+[license-code]: ./LICENSES/AGPL-3.0-or-later.txt
