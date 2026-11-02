@@ -1,88 +1,44 @@
 #!/bin/sh
-
-regex() {
-  if command -v pcre2grep >/dev/null
-  then
-    echo "$1" | pcre2grep "$2" >/dev/null
-  fi
-}
+set -eu
 
 build_file() {
   refmonth="$1"
+  number=1
 
-  suffix="001"
-  output_dir="out"
-  output_format="pdf"
-  while output_file="$refmonth-invoice-$suffix" && \
-    test -f "$output_dir/$output_file.$output_format"
-  do
-    suffix=$(printf "%03d" $(( 10#$suffix + 1 )))
-  done
+  case "$refmonth" in
+    [0-9][0-9][0-9][0-9]-0[1-9]|[0-9][0-9][0-9][0-9]-1[0-2]) ;;
+    *)
+      echo "Invalid reference month: $refmonth" >&2
+      exit 2
+      ;;
+  esac
 
-  if ! test -d "$output_dir"
+  if ! test -f "data/$refmonth.toml"
   then
-    mkdir "$output_dir"
+    echo "Missing data file: data/$refmonth.toml" >&2
+    exit 3
   fi
 
-  echo "Building file for $refmonth: $output_dir/$output_file.$output_format."
-
-  export INVOICE_REFMONTH="$refmonth"
-  lualatex \
-    --lua=main.lua \
-    --jobname="$output_file" \
-    --output-dir="$output_dir" \
-    --output-format="$output_format" \
-    --file-line-error \
-    main.tex >/dev/null
-  unset INVOICE_REFMONTH
-
-  echo Done. Cleaning...
-  for file in $(ls "$output_dir" | pcre2grep -v '.*\.pdf')
+  while test -f "out/$refmonth-invoice-$(printf '%03d' "$number").pdf"
   do
-    rm "$output_dir/$file"
+    number=$((number + 1))
   done
 
-  echo Done.
+  output="out/$refmonth-invoice-$(printf '%03d' "$number").pdf"
+  echo "Building $output."
+  typst compile --root . --input "refmonth=$refmonth" invoice.typ "$output"
 }
+
+mkdir -p out
 
 refmonth_list="$@"
 
 # If no reference month is defined, execute all of them.
 if test -z "$refmonth_list"
 then
-  refmonth_list="$( \
-    ls ./data/ | \
-    grep -v .gitkeep | \
-    grep -v main.lua | \
-    sed 's/\.lua//' \
-  )"
+  refmonth_list="$(ls data/*.toml | sed 's|data/||; s|\.toml$||' | grep -v '^main$')"
 fi
 
-# Validate inputs.
-for arg in $refmonth_list
-do
-  if test "$arg" = "-h" || test "$arg" = "--help"
-  then
-    echo    "Invoice build"
-    echo    "Usage:"
-    echo -e "\tbuild [REF_MONTH]..."
-    exit 0
-  fi
-
-  if ! regex "$arg" '\d{4}-\d{2}'
-  then
-    echo "Invalid reference month." >&2
-    exit 2
-  fi
-
-  if ! test -f "data/$arg.lua"
-  then
-    echo "Missing data file (data/$arg.lua)." >&2
-    exit 3
-  fi
-done
-
-# Build files.
 for refmonth in $refmonth_list
 do
   build_file "$refmonth"

@@ -2,77 +2,69 @@
 
 [![License][badge-1-img]][badge-1-link]
 
-My personal invoice template built with LaTeX and Lua.
+My personal invoice template built with Typst.
 
 ## Dependencies
 
-- `lualatex`
-- `pcre2grep` (optional)
+- `typst` 0.13 or newer
 
 ## Invoice data
 
-To generate a document, first it's needed to set the data for an
-invoice, defined in the `data/` directory.
+To generate a document, first set the data for an invoice in the `data/`
+directory as TOML files.
 
 ### Shared data
 
-Create file `data/main.lua` with the following body:
+Create `data/main.toml` with the following body:
 
-```lua
-exporter = {
-  name = '...',
-  id_number = '...',
-  address = {
-    '...',
-    '...',
-  },
-}
-consignee = {
-  name = '...',
-  id_number = '...',
-  address = {
-    '...',
-    '...',
-  },
-}
-bank_account = {
-  payment_desc = '...',
-  iban = '...',
-  bank = {
-    name = '...',
-    swift_code = '...',
-  },
-  intermediary_bank = {
-    name = '...',
-    swift_code = '...',
-    account_holder = '...',
-    account_number = '...',
-  },
-}
+```toml
+[exporter]
+name = "..."
+id_number = "..."
+address = ["...", "..."]
+
+[consignee]
+name = "..."
+id_number = "..."
+address = ["...", "..."]
+
+[bank_account]
+payment_desc = "..."
+iban = "..."
+
+[bank_account.bank]
+name = "..."
+swift_code = "..."
+
+[bank_account.intermediary_bank]
+name = "..."
+swift_code = "..."
+account_holder = "..."
+account_number = "..."
 ```
 
 ### Month-specific data
 
-Create file `data/YYYY-MM.lua` with the following body:
+Create `data/YYYY-MM.toml` with the following body:
 
-```lua
-invoice = {
-  reference = '...',
-  issue_date = '...',
-  reference_date = '...',
-}
-services = {
-  description = '...',
-  value = '...',
-  currency = '...',
-}
+```toml
+[invoice]
+reference = "..."
+issue_date = "..."
+
+[invoice.work_period]
+dates = "..."
+hours = "..."
+
+[services]
+description = "..."
+value = "..."
 ```
 
 ## Build
 
-After the data is set, just run `./build YYYY-MM` with the correct
-reference month and the PDF file will be generated in the `out/`
-directory as `YYYY-MM-invoice-NNN.pdf`.
+Run `./build YYYY-MM` to build one invoice, or `./build` to build every TOML
+file. The PDF is written to `out/` as `YYYY-MM-invoice-NNN.pdf`.
 
 ## License
 

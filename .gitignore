@@ -1,5 +1,6 @@
+/.gitsecret/keys/random_seed
+/.gitsecret/keys/pubring.kbx~
+!*.secret
 /out/
 /data/*
 !/data/.gitkeep
-.gitsecret/keys/random_seed
-!*.secret
